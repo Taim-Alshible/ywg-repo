@@ -27,7 +27,9 @@ class UpdatePatientRequest extends FormRequest
             'lName' => 'required | string',
             'phone' => 'required | string',
             'location' => 'required | string',
-            'specialty' => 'nullable | string'
+            'specialty' => 'nullable | string',
+            'checked' => 'boolean',
+            'delivered' => 'boolean'
         ];
     }
 }

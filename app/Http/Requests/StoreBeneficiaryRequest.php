@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreBeneficiaryRequest extends FormRequest
 {
@@ -22,15 +23,30 @@ class StoreBeneficiaryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'fName' => 'required | string | max:40',
+            'fName' => [
+                'required',
+                'string',
+                'max:40',
+            ],
             'father_name' => 'required | string | max:40',
-            'lName' => 'required | string | max:40',
+            'lName' => [
+                'required',
+                'string',
+                'max:40',
+                Rule::unique('beneficiaries')->where(function ($query) {
+                    return $query
+                        ->where('fName', $this->input('fName'))
+                        ->where('father_name', $this->input('father_name'))
+                        ->where('lName', $this->input('lName'));
+                }),
+            ],
             'phone' => 'required | string | min:10',
             'nationalNum' => 'nullable | string ',
             'age' => 'required | integer',
             'location' => 'required | string | max:40',
             'numOfPeople' => 'required | integer',
             'size' => 'nullable | string',
+            'checked' => 'boolean',
             'delivered' => 'boolean'
         ];
     }

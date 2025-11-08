@@ -21,6 +21,23 @@ class PatientController extends Controller
         $patients = Patient::all();
         return view('patient.list', compact('patients'));
     }
+
+    public function toggleChecked(Patient $patient)
+    {
+        $patient->checked = !$patient->checked;
+        $patient->save();
+
+        return response()->json(['checked' => (bool) $patient->checked]);
+    }
+
+    public function toggleDelivered(Patient $patient)
+    {
+        $patient->delivered = !$patient->delivered;
+        $patient->save();
+
+        return response()->json(['delivered' => (bool) $patient->delivered]);
+    }
+
     public function show(Patient $patient)
     {
         $patient->load('appointments.doctor');

@@ -17,7 +17,7 @@ class Beneficiary extends Model
     public function needs()
     {
         return $this->belongsToMany(Need::class, 'beneficiary_need')
-            ->withPivot('quantity', 'delivered')
+            ->withPivot('quantity', 'priority', 'delivered')
             ->withTimestamps();
     }
 }

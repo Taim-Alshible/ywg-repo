@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreBeneficiaryNeedRequest;
 use App\Http\Requests\StoreBeneficiaryRequest;
 use App\Http\Requests\UpdateBeneficiaryRequest;
 use App\Models\Beneficiary;
@@ -17,6 +18,22 @@ class BeneficiaryController extends Controller
         $beneficiaries = Beneficiary::all();
         // return response()->json($beneficiary, 200);
         return view('beneficiary.list', compact('beneficiaries'));
+    }
+
+    public function toggleChecked(Beneficiary $beneficiary)
+    {
+        $beneficiary->checked = !$beneficiary->checked;
+        $beneficiary->save();
+
+        return response()->json(['checked' => (bool) $beneficiary->checked]);
+    }
+
+    public function toggleDeliveredStatus(Beneficiary $beneficiary)
+    {
+        $beneficiary->delivered = !$beneficiary->delivered;
+        $beneficiary->save();
+
+        return response()->json(['delivered' => (bool) $beneficiary->delivered]);
     }
 
     public function show($id)
@@ -54,6 +71,51 @@ class BeneficiaryController extends Controller
         $beneficiary = Beneficiary::findOrFail($id);
         $beneficiary->update($request->validated());
         return response()->json($beneficiary, 200);
+    }
+
+    public function addNeedToBeneficiary(StoreBeneficiaryNeedRequest $request, $beneficiary_id)
+    {
+        // The $request->validated() *should* ideally contain need_id, quantity, and delivered.
+        // If it doesn't, ensure they are present.
+        $validatedData = $request->validated();
+
+        // Use $request->input('need_id') only if it's not present in $validatedData
+        $needId = $validatedData['need_id'] ?? $request->input('need_id');
+
+        // Find the Beneficiary model instance
+        $beneficiary = Beneficiary::findOrFail($beneficiary_id);
+
+        // Get the data for the pivot table (quantity, delivered)
+        $pivotData = array_intersect_key(
+            $validatedData,
+            array_flip(['quantity', 'priority', 'delivered']) // Keys in the pivot table besides the foreign keys
+        );
+
+        // Use the relationship method needs() and call attach()
+        // The first argument is the ID of the model to attach (Need ID)
+        // The second argument is an array of data for the pivot table
+        $beneficiary->needs()->attach($needId, $pivotData);
+
+        return redirect()->route('beneficiary.show', ['id' => $beneficiary_id]);
+    }
+
+    public function toggleDelivered(Beneficiary $beneficiary, Need $need)
+    {
+        $beneficiaryNeed = $beneficiary->needs()
+            ->where('needs.id', $need->id)
+            ->first();
+
+        if (!$beneficiaryNeed) {
+            return response()->json(['error' => 'Need not associated with beneficiary'], 404);
+        }
+
+        $newDeliveredStatus = !$beneficiaryNeed->pivot->delivered;
+
+        $beneficiary->needs()->updateExistingPivot($need->id, [
+            'delivered' => $newDeliveredStatus,
+        ]);
+        
+        return response()->json(['delivered' => (bool) $newDeliveredStatus]);
     }
 
     public function updateBeneficiaryNeeds(Request $request, $beneficiary_id)

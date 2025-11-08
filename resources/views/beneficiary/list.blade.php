@@ -13,7 +13,7 @@
                             <th class="px-4 py-3 text-right font-semibold">اسم المستفيد</th>
                             <th class="px-4 py-3 text-right font-semibold">رقم الهاتف</th>
                             <th class="px-4 py-3 text-right font-semibold">الموقع</th>
-                            <th class="px-4 py-3 text-right font-semibold">تم التسليم</th>
+                            <th class="px-4 py-3 text-right font-semibold">تم التحقق</th>
                             <th class="px-4 py-3 text-right font-semibold">الإجراءات</th>
                         </tr>
                     </thead>
@@ -30,12 +30,12 @@
                                 <td class="px-4 py-2 border-t border-gray-200 dark:border-gray-700">
                                     {{ $beneficiary->location }}</td>
                                 <td class="px-4 py-2 border-t border-gray-200 dark:border-gray-700">
-                                    {{ $beneficiary->delivered ? '✔️ نعم' : '❌ لا' }}
+                                    {{ $beneficiary->checked ? '✔️ نعم' : '❌ لا' }}
                                 </td>
                                 <td class="px-4 py-2 border-t border-gray-200 dark:border-gray-700 space-x-2">
                                     <a href="{{ route('beneficiary.show', $beneficiary->id) }}"
-                                        class="px-3 py-1 bg-cyan-500 text-white rounded-md hover:bg-cyan-600">
-                                        عرض
+                                        class="px-3 py-1 bg-teal-500 text-white rounded-md hover:bg-teal-600">
+                                        تفاصيل
                                     </a>
                                     <form style="display:inline;" method="POST"
                                         action="{{ route('beneficiary.destroy', $beneficiary->id) }}"

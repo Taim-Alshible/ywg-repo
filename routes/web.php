@@ -25,10 +25,10 @@ Route::delete('beneficiary/{id}', [BeneficiaryController::class, 'destroy'])->na
 
 Route::post('beneficiary/{beneficiary}/family', [BeneficiaryFamilyController::class, 'store'])->name('family.store');
 // Route::apiResource('beneficiary', BeneficiaryController::class);
-Route::post('beneficiary/{beneficiary_id}/need', [BeneficiaryController::class, 'addNeedToBeneficiary']);
+Route::post('beneficiary/{beneficiary_id}/need', [BeneficiaryController::class, 'addNeedToBeneficiary'])->name('need.store');
 Route::put('beneficiary/{beneficiary_id}/need', [BeneficiaryController::class, 'updateBeneficiaryNeeds']);
 Route::get('beneficiary/{beneficiary_id}/need', [BeneficiaryController::class, 'getBeneficiaryNeeds']);
-Route::apiResource('beneficiary/{bId}/family', BeneficiaryFamilyController::class);
+// Route::apiResource('beneficiary/{bId}/family', BeneficiaryFamilyController::class);
 
 // Route::post('')
 
@@ -44,7 +44,7 @@ Route::delete('medicine/{patient_id}/{id}', [MedicineController::class, 'destroy
 Route::get('doctor/create', [DoctorController::class, 'create'])->name('doctor.create');
 Route::get('doctor', [DoctorController::class, 'index'])->name('doctor.list');
 Route::post('doctor', [DoctorController::class, 'store'])->name('doctor.store');
-Route::apiResource('doctor/{doctor_id}/vacancy', DoctorVacancyController::class);
+// Route::apiResource('doctor/{doctor_id}/vacancy', DoctorVacancyController::class);
 
 // Route::apiResource('patient', PatientController::class);
 Route::get('patient/create', [PatientController::class, 'create'])->name('patient.create');
@@ -73,4 +73,3 @@ Route::delete('examination/{examination_id}', [ExaminationController::class, 'de
 Route::post('examination/{examination}/analysis', [AnalysisController::class, 'store'])->name('analysis.store');
 
 Route::post('examination/{examination}/radiology', [RadiologyController::class, 'store'])->name('radiology.store');
-

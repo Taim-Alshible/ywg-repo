@@ -22,6 +22,7 @@ class UpdateBeneficiaryRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'checked' => 'boolean',
             'delivered' => 'boolean'
         ];
     }

@@ -24,7 +24,7 @@ class StoreExaminationRequest extends FormRequest
         return [
             'specialty' => 'required | string',
             'image' => 'required | image | mimes:png,jpg,jpeg,gif | max:2048',
-            'delivered' => 'boolean'
+            'cost' => 'required | string'
         ];
     }
 }

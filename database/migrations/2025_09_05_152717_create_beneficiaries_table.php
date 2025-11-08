@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('fName');
             $table->string('father_name');
             $table->string('lName');
-            $table->integer('phone');
+            $table->string('phone');
             $table->integer('nationalNum')->nullable();
             $table->integer('age');
             $table->text('location');

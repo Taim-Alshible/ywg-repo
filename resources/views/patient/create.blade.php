@@ -60,18 +60,36 @@
                             class="w-full rounded-md border-gray-400 dark:border-gray-500 bg-white dark:bg-gray-700 dark:text-gray-100 focus:border-cyan-500 focus:ring-cyan-500"
                             value="{{ old('age') }}">
                     </div>
-                    <div>
+                    <div class="flex flex-col gap-2">
                         <label class="block font-medium">يحتاج طبيب</label>
-                        <input type="checkbox" name="needDoctor" value="1"
-                            class="rounded border-gray-400 dark:border-gray-500 dark:bg-gray-700 focus:ring-cyan-500"
-                            {{ old('needDoctor') ? 'checked' : '' }}>
-                        <label>يحتاج طبيب</label>
+                        <label class="inline-flex items-center space-x-2">
+                            <input type="checkbox" name="needDoctor" value="1"
+                                class="rounded border-gray-400 dark:border-gray-500 dark:bg-gray-700 focus:ring-cyan-500"
+                                {{ old('needDoctor') ? 'checked' : '' }}>
+                            <span>يحتاج طبيب</span>
+                        </label>
                     </div>
                     <div>
                         <label class="block font-medium">التخصص</label>
                         <input type="text" name="specialty"
                             class="w-full rounded-md border-gray-400 dark:border-gray-500 bg-white dark:bg-gray-700 dark:text-gray-100 focus:border-cyan-500 focus:ring-cyan-500"
                             value="{{ old('specialty') }}">
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
+                        <label class="inline-flex items-center space-x-2">
+                            <input type="checkbox" name="checked" value="1"
+                                class="rounded border-gray-400 dark:border-gray-500 dark:bg-gray-700 focus:ring-cyan-500"
+                                {{ old('checked') ? 'checked' : '' }}>
+                            <span>تم التحقق</span>
+                        </label>
+
+                        <label class="inline-flex items-center space-x-2">
+                            <input type="checkbox" name="delivered" value="1"
+                                class="rounded border-gray-400 dark:border-gray-500 dark:bg-gray-700 focus:ring-cyan-500"
+                                {{ old('delivered') ? 'checked' : '' }}>
+                            <span>تم التسليم للمريض</span>
+                        </label>
                     </div>
 
                     <div>

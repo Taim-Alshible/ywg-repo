@@ -40,6 +40,106 @@
                     @endif
                 </div>
 
+                <div class="mt-4 bg-gray-50 dark:bg-gray-700 p-4 rounded-xl shadow-sm"
+                    x-data="{
+                        checked: {{ json_encode((bool) $patient->checked) }},
+                        togglingChecked: false,
+                        toggleChecked() {
+                            if (this.togglingChecked) {
+                                return;
+                            }
+
+                            this.togglingChecked = true;
+
+                            fetch('{{ route('api.patient.toggle-checked', $patient) }}', {
+                                method: 'PATCH',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                body: JSON.stringify({})
+                            })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.checked !== undefined) {
+                                        this.checked = !!data.checked;
+                                    } else {
+                                        console.error('API response error:', data);
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error('Fetch error:', err);
+                                })
+                                .finally(() => {
+                                    this.togglingChecked = false;
+                                });
+                        }
+                    }">
+                    <div class="flex items-center justify-between">
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">تم التحقق من بيانات المريض</span>
+                        <label class="inline-flex items-center space-x-2">
+                            <input type="checkbox"
+                                :checked="checked"
+                                :disabled="togglingChecked"
+                                @click.prevent="toggleChecked()"
+                                class="rounded border-gray-400 dark:border-gray-500 dark:bg-gray-700 focus:ring-cyan-500">
+                            <span x-text="checked ? 'تم التحقق' : 'غير متحقق'"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-4 bg-gray-50 dark:bg-gray-700 p-4 rounded-xl shadow-sm"
+                    x-data="{
+                        delivered: {{ json_encode((bool) $patient->delivered) }},
+                        togglingDelivered: false,
+                        toggleDelivered() {
+                            if (this.togglingDelivered) {
+                                return;
+                            }
+
+                            this.togglingDelivered = true;
+
+                            fetch('{{ route('api.patient.toggle-delivered', $patient) }}', {
+                                method: 'PATCH',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                body: JSON.stringify({})
+                            })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.delivered !== undefined) {
+                                        this.delivered = !!data.delivered;
+                                    } else {
+                                        console.error('API response error:', data);
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error('Fetch error:', err);
+                                })
+                                .finally(() => {
+                                    this.togglingDelivered = false;
+                                });
+                        }
+                    }">
+                    <div class="flex items-center justify-between">
+                        <span class="font-semibold text-gray-800 dark:text-gray-100">تم التسليم للمريض</span>
+                        <label class="inline-flex items-center space-x-2">
+                            <input type="checkbox"
+                                :checked="delivered"
+                                :disabled="togglingDelivered"
+                                @click.prevent="toggleDelivered()"
+                                class="rounded border-gray-400 dark:border-gray-500 dark:bg-gray-700 focus:ring-cyan-500">
+                            <span x-text="delivered ? 'تم التسليم' : 'لم يتم التسليم'"></span>
+                        </label>
+                    </div>
+                </div>
+
                 <h3 class="text-xl font-semibold mt-6 mb-2 text-gray-800 dark:text-gray-100">الأدوية</h3>
                 @if ($patient->medicines->count() > 0)
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>أثر</title>
+    <title>YWG</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         [x-cloak] {
@@ -13,9 +14,9 @@
         }
     </style>
 
-    <head>
-        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.0/dist/cdn.min.js"></script>
-    </head>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.0/dist/cdn.min.js"></script>
+
 </head>
 
 <body class="h-full bg-white text-cyan-900">
@@ -25,7 +26,8 @@
                 <div class="flex h-16 items-center justify-between">
                     <div class="flex items-center">
                         <div class="shrink-0">
-                            <img src="{{ asset('images/atharLogo.jpg') }}" alt="شعار شركتك" class="size-8" />
+                            <img src="{{ asset('images/لقطة شاشة 2025-10-01 232153.png') }}" alt="شعار شركتك"
+                                class="size-8 rounded-full" /> {{-- تم إضافة rounded-full هنا --}}
                         </div>
                         <div class="hidden md:block">
                             <div class="ml-10 flex items-baseline space-x-4">
@@ -123,7 +125,6 @@
         </div>
 
     </div>
-    <script src="//unpkg.com/alpinejs" defer></script>
 </body>
 
 </html>

@@ -49,11 +49,11 @@
                             class="w-full rounded-md border-gray-300 dark:bg-gray-700 dark:text-gray-100" required>
                     </div>
 
-                    <div class="flex items-center space-x-2 justify-end" dir="rtl">
-                        <label for="delivered" class="text-gray-700 dark:text-gray-300">تم التسليم</label>
-                        <input type="checkbox" id="delivered" name="delivered" value="1"
+                    <div class="text-right" dir="rtl">
+                        <label for="delivered" class="text-gray-700 dark:text-gray-300">التكلفة</label>
+                        <input type="text" id="cost" name="cost" value="1"
                             class="rounded border-gray-300 dark:bg-gray-700 dark:border-gray-600"
-                            {{ old('delivered') ? 'checked' : '' }}>
+                            {{ old('cost') ? 'checked' : '' }}>
                     </div>
 
                     <div class="flex justify-end space-x-2 pt-4" dir="rtl">
@@ -68,9 +68,9 @@
                     </div>
                 </form>
 
-             
-                </div>
+
             </div>
         </div>
+    </div>
     </div>
 </x-layout>

@@ -84,11 +84,20 @@
                             value="{{ old('size') }}">
                     </div>
 
-                    <div class="flex items-center space-x-2">
-                        <input type="checkbox" name="delivered" value="1"
-                            class="rounded border-gray-400 dark:border-gray-500 dark:bg-gray-700 focus:ring-cyan-500"
-                            {{ old('delivered') ? 'checked' : '' }}>
-                        <label>تم التسليم</label>
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0">
+                        <label class="inline-flex items-center space-x-2">
+                            <input type="checkbox" name="checked" value="1"
+                                class="rounded border-gray-400 dark:border-gray-500 dark:bg-gray-700 focus:ring-cyan-500"
+                                {{ old('checked') ? 'checked' : '' }}>
+                            <span>تم التحقق</span>
+                        </label>
+
+                        <label class="inline-flex items-center space-x-2">
+                            <input type="checkbox" name="delivered" value="1"
+                                class="rounded border-gray-400 dark:border-gray-500 dark:bg-gray-700 focus:ring-cyan-500"
+                                {{ old('delivered') ? 'checked' : '' }}>
+                            <span>تم التسليم للمستفيد</span>
+                        </label>
                     </div>
 
                     <div>

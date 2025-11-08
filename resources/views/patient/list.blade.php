@@ -29,7 +29,7 @@
                                 </td>
                                 <td class="px-4 py-2 border-t border-gray-200 dark:border-gray-700 space-x-2">
                                     <a href="{{ route('patient.show', $patient->id) }}"
-                                        class="px-3 py-1 bg-cyan-500 text-white rounded-md hover:bg-cyan-600">
+                                        class="px-3 py-1 bg-teal-500 text-white rounded-md hover:bg-teal-600">
                                         تفاصيل
                                     </a>
                                     <form style="display:inline;" method="POST"
