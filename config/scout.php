@@ -1,7 +1,8 @@
 <?php
 
 use App\Models\Beneficiary;
-use Ramsey\Collection\Collection;
+use App\Models\Examination;
+use App\Models\Patient;
 
 return [
 
@@ -253,9 +254,8 @@ return [
                 'search-parameters' => [
                     'query_by' => 'fName, father_name, lName, checked, delivered'
                 ],
-            ]
-        ],
-        Patient::class => [
+            ],
+            Patient::class => [
                 'collection-schema' => [
                     'fields' => [
                         [
@@ -299,9 +299,37 @@ return [
 
                 ],
                 'search-parameters' => [
-                    'query_by' => 'fName, father_name, lName, checked, delivered'
+                    'query_by' => 'fName, father_name, lName, needDoctor, specialty'
                 ],
-            ]
+            ],
+            Examination::class => [
+                'collection-schema' => [
+                    'fields' => [
+                        [
+                            'name' => 'id',
+                            'type' => 'string'
+                        ],
+                        [
+                            'name' => 'patient_id',
+                            'type' => 'string'
+                        ],
+                        [
+                            'name' => 'analyses',
+                            'type' => 'string'
+                        ],
+                        [
+                            'name' => 'radiologies',
+                            'type' => 'string'
+                        ]
+                    ],
+                    'default_sorting_field' => 'created_at',
+
+                ],
+                'search-parameters' => [
+                    'query_by' => 'patient_id, analyses, radiologies'
+                ],
+            ],
+        ],
     ],
 
 ];
