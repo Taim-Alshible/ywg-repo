@@ -7,6 +7,8 @@ use App\Http\Requests\UpdatePatientRequest;
 use App\Models\Appointment;
 use App\Models\Doctor;
 use App\Models\Patient;
+use ArPHP\I18N\Arabic;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class PatientController extends Controller
@@ -16,10 +18,54 @@ class PatientController extends Controller
         return view('patient.create');
     }
 
-    public function index()
+   public function index(Request $request)
     {
-        $patients = Patient::all();
-        return view('patient.list', compact('patients'));
+        $searchTerm = $request->query('search');
+
+        $patients = $searchTerm
+            ? Patient::search($searchTerm)->get()
+            : Patient::all();
+
+        return view('patient.list', [
+            'patients' => $patients,
+            'searchTerm' => $searchTerm,
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        if (!$request->filled('search')) {
+            return redirect()->route('patient.list');
+        }
+
+        return $this->index($request);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $searchTerm = $request->query('search');
+
+        $patients = $searchTerm
+            ? Patient::search($searchTerm)->get()
+            : Patient::all();
+
+        $patients->load(['medicines']);
+
+        $generatedAt = now();
+        $arabic = new Arabic('Glyphs');
+
+        $pdf = Pdf::loadView('patient.pdf', [
+            'patients' => $patients,
+            'searchTerm' => $searchTerm,
+            'generatedAt' => $generatedAt,
+            'arabic' => $arabic,
+        ])->setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'defaultFont' => 'DejaVu Sans',
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->stream('patients-' . $generatedAt->format('Ymd_His') . '.pdf');
     }
 
     public function toggleChecked(Patient $patient)

@@ -15,16 +15,18 @@ use App\Models\Beneficiary;
 use App\Models\Examination;
 use App\Models\Radiology;
 use Illuminate\Support\Facades\Route;
+use Typesense\Client;
 
 Route::get('beneficiary/create', [BeneficiaryController::class, 'create'])->name('beneficiary.create');
 Route::get('beneficiary', [BeneficiaryController::class, 'index'])->name('beneficiary.list');
+Route::get('beneficiary/search', [BeneficiaryController::class, 'search'])->name('beneficiary.search');
+Route::get('beneficiary/pdf', [BeneficiaryController::class, 'exportPdf'])->name('beneficiary.pdf');
 Route::get('beneficiary/{id}', [BeneficiaryController::class, 'show'])->name('beneficiary.show');
 Route::post('beneficiary', [BeneficiaryController::class, 'store'])->name('beneficiary.store');
 Route::put('beneficiary/{id}', [BeneficiaryController::class, 'update']);
 Route::delete('beneficiary/{id}', [BeneficiaryController::class, 'destroy'])->name('beneficiary.destroy');
 
 Route::post('beneficiary/{beneficiary}/family', [BeneficiaryFamilyController::class, 'store'])->name('family.store');
-// Route::apiResource('beneficiary', BeneficiaryController::class);
 Route::post('beneficiary/{beneficiary_id}/need', [BeneficiaryController::class, 'addNeedToBeneficiary'])->name('need.store');
 Route::put('beneficiary/{beneficiary_id}/need', [BeneficiaryController::class, 'updateBeneficiaryNeeds']);
 Route::get('beneficiary/{beneficiary_id}/need', [BeneficiaryController::class, 'getBeneficiaryNeeds']);
@@ -49,6 +51,8 @@ Route::post('doctor', [DoctorController::class, 'store'])->name('doctor.store');
 // Route::apiResource('patient', PatientController::class);
 Route::get('patient/create', [PatientController::class, 'create'])->name('patient.create');
 Route::get('patient', [PatientController::class, 'index'])->name('patient.list');
+Route::get('patient/search', [PatientController::class, 'search'])->name('patient.search');
+Route::get('patient/pdf', [PatientController::class, 'exportPdf'])->name('patient.pdf');
 // Route::get('patient/{id}', [PatientController::class, 'show'])->name('patient.show');
 Route::get('/patient/{patient}', [PatientController::class, 'show'])->name('patient.show');
 
@@ -67,6 +71,8 @@ Route::get('/patients/{patient}/examination/create', [ExaminationController::cla
     ->name('examination.create');
 Route::post('patients/{patient}/examination', [ExaminationController::class, 'store'])->name('examination.store');
 Route::get('examination', [ExaminationController::class, 'index'])->name('examination.list');
+Route::get('examination/search', [ExaminationController::class, 'search'])->name('examination.search');
+Route::get('examination/pdf', [ExaminationController::class, 'exportPdf'])->name('examination.pdf');
 Route::get('examination/{examination_id}', [ExaminationController::class, 'show'])->name('examination.show');
 Route::delete('examination/{examination_id}', [ExaminationController::class, 'destroy'])->name('examination.destroy');
 

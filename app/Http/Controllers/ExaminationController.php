@@ -6,6 +6,8 @@ use App\Http\Requests\StoreExaminationRequest;
 use App\Http\Requests\UpdateExaminationRequest;
 use App\Models\Examination;
 use App\Models\Patient;
+use ArPHP\I18N\Arabic;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class ExaminationController extends Controller
@@ -16,10 +18,55 @@ class ExaminationController extends Controller
 
         return view('examination.create', ['patient' => $patient]);
     }
-    public function index()
+   public function index(Request $request)
     {
-        $examinations = Examination::all();
-        return view('examination.list', ['examinations' => $examinations]);
+        $searchTerm = $request->query('search');
+
+        $examinations = $searchTerm
+            ? Examination::search($searchTerm)->get()
+            : Examination::all();
+
+        return view('examination.list', [
+            'examinations' => $examinations,
+            'searchTerm' => $searchTerm,
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        if (!$request->filled('search')) {
+            return redirect()->route('examination.list');
+        }
+
+        return $this->index($request);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $searchTerm = $request->query('search');
+
+        $examinations = $searchTerm
+            ? Examination::search($searchTerm)->get()
+            : Examination::all();
+
+        $examinations->load(['patient', 'analyses', 'radiologies']);
+
+        $generatedAt = now();
+
+        $arabic = new Arabic('Glyphs');
+
+        $pdf = Pdf::loadView('examination.pdf', [
+            'examinations' => $examinations,
+            'searchTerm' => $searchTerm,
+            'generatedAt' => $generatedAt,
+            'arabic' => $arabic,
+        ])->setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'defaultFont' => 'DejaVu Sans',
+        ])->setPaper('a4', 'portrait');
+
+        return $pdf->stream('examinations-' . $generatedAt->format('Ymd_His') . '.pdf');
     }
 
     public function show($id)

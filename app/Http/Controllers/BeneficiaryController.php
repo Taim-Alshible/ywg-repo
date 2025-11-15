@@ -7,17 +7,63 @@ use App\Http\Requests\StoreBeneficiaryRequest;
 use App\Http\Requests\UpdateBeneficiaryRequest;
 use App\Models\Beneficiary;
 use App\Models\Need;
+use ArPHP\I18N\Arabic;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Typesense\Client;
 
 use function PHPSTORM_META\map;
 
 class BeneficiaryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $beneficiaries = Beneficiary::all();
-        // return response()->json($beneficiary, 200);
-        return view('beneficiary.list', compact('beneficiaries'));
+        $searchTerm = $request->query('search');
+
+        $beneficiaries = $searchTerm
+            ? Beneficiary::search($searchTerm)->get()
+            : Beneficiary::all();
+
+        return view('beneficiary.list', [
+            'beneficiaries' => $beneficiaries,
+            'searchTerm' => $searchTerm,
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        if (!$request->filled('search')) {
+            return redirect()->route('beneficiary.list');
+        }
+
+        return $this->index($request);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $searchTerm = $request->query('search');
+
+        $beneficiaries = $searchTerm
+            ? Beneficiary::search($searchTerm)->get()
+            : Beneficiary::all();
+
+        $beneficiaries->load(['needs']);
+
+        $generatedAt = now();
+        $arabic = new Arabic('Glyphs');
+
+        $pdf = Pdf::loadView('beneficiary.pdf', [
+            'beneficiaries' => $beneficiaries,
+            'searchTerm' => $searchTerm,
+            'generatedAt' => $generatedAt,
+            'arabic' => $arabic,
+        ])->setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'defaultFont' => 'DejaVu Sans',
+        ])->setPaper('a4', 'landscape');
+
+        return $pdf->stream('beneficiaries-' . $generatedAt->format('Ymd_His') . '.pdf');
     }
 
     public function toggleChecked(Beneficiary $beneficiary)
@@ -114,7 +160,7 @@ class BeneficiaryController extends Controller
         $beneficiary->needs()->updateExistingPivot($need->id, [
             'delivered' => $newDeliveredStatus,
         ]);
-        
+
         return response()->json(['delivered' => (bool) $newDeliveredStatus]);
     }
 
